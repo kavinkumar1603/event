@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogIn, Database, Eye, EyeOff, Users } from 'lucide-react';
+import { LogIn, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 import { UserRole } from '../types';
-import { seedAllData, forceUpdateStudents } from '../seedData';
 import { STUDENTS } from '../studentData';
 import Navbar from '../components/Navbar';
 
@@ -45,24 +44,11 @@ const STAFF_CREDENTIALS = {
 const Login = () => {
   const { handleLogin } = useAppContext();
   const navigate = useNavigate();
-  const [seeding, setSeeding] = useState(false);
-  const [seedStatus, setSeedStatus] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Automatically seed data on first load
-    const autoSeed = async () => {
-      setSeeding(true);
-      const result = await seedAllData();
-      setSeedStatus(result);
-      setSeeding(false);
-    };
-    autoSeed();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,14 +83,6 @@ const Login = () => {
     }
     
     setLoading(false);
-  };
-
-  const handleManualSeed = async () => {
-    setSeeding(true);
-    setSeedStatus(null);
-    const result = await seedAllData();
-    setSeedStatus(result);
-    setSeeding(false);
   };
 
   return (
@@ -170,48 +148,6 @@ const Login = () => {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-
-          {/* Seed Database Button */}
-          <div className="mt-6 pt-6 border-t border-slate-100 space-y-3">
-            <button
-              onClick={handleManualSeed}
-              disabled={seeding}
-              className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all disabled:opacity-50"
-            >
-              <Database size={18} />
-              {seeding ? 'Seeding Database...' : 'Seed Database'}
-            </button>
-            <button
-              onClick={async () => {
-                setSeeding(true);
-                const result = await forceUpdateStudents();
-                setSeedStatus({ students: result });
-                setSeeding(false);
-              }}
-              disabled={seeding}
-              className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-blue-100 text-blue-600 hover:bg-blue-200 transition-all disabled:opacity-50"
-            >
-              <Users size={18} />
-              {seeding ? 'Updating...' : 'Update All Students'}
-            </button>
-            {seedStatus && (
-              <div className="mt-3 text-center text-xs space-y-1">
-                {seedStatus.users && (
-                  <p className={seedStatus.users?.success ? 'text-emerald-600' : 'text-red-600'}>
-                    Users: {seedStatus.users?.message}
-                  </p>
-                )}
-                <p className={seedStatus.students?.success ? 'text-emerald-600' : 'text-red-600'}>
-                  Students: {seedStatus.students?.message}
-                </p>
-                {seedStatus.events && (
-                  <p className={seedStatus.events?.success ? 'text-emerald-600' : 'text-red-600'}>
-                    Events: {seedStatus.events?.message}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
         </motion.div>
       </div>
     </div>

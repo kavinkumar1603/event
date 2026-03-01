@@ -18,7 +18,7 @@ const Navbar = () => {
           C
         </div>
         <div>
-          <h1 className="font-bold text-lg leading-tight">CSE Event Nexus</h1>
+          <h1 className="font-bold text-lg leading-tight">CSE Event Management</h1>
           <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Department of Computer Science</p>
         </div>
       </div>
