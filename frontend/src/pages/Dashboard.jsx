@@ -352,6 +352,14 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+
+      {/* OD Request Detail Modal */}
+      {selectedODRequest && (
+        <ODRequestDetailModal 
+          request={selectedODRequest} 
+          onClose={() => setSelectedODRequest(null)} 
+        />
+      )}
     </div>
   );
 };
